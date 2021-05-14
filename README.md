@@ -17,8 +17,11 @@ df.head()
 import pandas_profiling as pp
 pp.ProfileReport(df)
 
+
 # Finding Missing Values 
 msno.matrix(df)
+
+![image](https://user-images.githubusercontent.com/82114061/118257297-185ce000-b4cc-11eb-9230-c9f937df319e.png)
 
 # Replacing missing Values with column means 
 df.anaemia = df.anaemia.fillna('1')
@@ -41,12 +44,13 @@ df['smoking'] = np.where(df['smoking'].str.contains('Yes I smoke'), 1, 0)
 df['DEATH_EVENT'] = np.where(df['DEATH_EVENT'].str.contains("Death"), 1, 0)
 df.head()
 
+
 # Counting Values for Data Exploration visualizations 
 df1 = df.groupby(["sex","diabetes","smoking","anaemia","high_blood_pressure","DEATH_EVENT"])["age"].count().reset_index()
 df1.columns= ["sex","diabetes","smoking","anaemia","high_blood_pressure","DEATH_EVENT", "count"]
 
 
-#Descriptive statistics-Plotting a sun burst chart 
+# Descriptive statistics-Plotting a sun burst chart 
 df1.loc[df1["sex"]== 0 , "sex"] = "female"
 df1.loc[df1["sex"]== 1, "sex"] = "male"
 
@@ -97,6 +101,11 @@ fig = px.sunburst(df1,
                   height=600)
 
 fig.show()
+
+![newplot (6)](https://user-images.githubusercontent.com/82114061/118256655-5dccdd80-b4cb-11eb-9b61-c8fe585eec3d.png)
+![newplot (7)](https://user-images.githubusercontent.com/82114061/118256664-60c7ce00-b4cb-11eb-97da-88cdf2639a5c.png)
+![newplot (8)](https://user-images.githubusercontent.com/82114061/118256673-62919180-b4cb-11eb-9606-d083e814776e.png)
+![newplot (9)](https://user-images.githubusercontent.com/82114061/118256686-64f3eb80-b4cb-11eb-983f-d44cc8ee59c6.png)
 
 
 # Distribution of data to see dependency of variables 
@@ -160,6 +169,12 @@ high_blood_pressure_mortality.append(len(df[(df['DEATH_EVENT']==0)&(df['high_blo
 high_blood_pressure_labels = ['high_blood_pressure_died','high_blood_pressure_survived','no_high_blood_pressure_died','no_high_blood_pressure_survived']
 plt.pie(x=high_blood_pressure_mortality,autopct='%.1f',labels=high_blood_pressure_labels);
 
+![image](https://user-images.githubusercontent.com/82114061/118257360-2b6fb000-b4cc-11eb-8875-aa8ae84b3695.png)
+![image](https://user-images.githubusercontent.com/82114061/118257377-30ccfa80-b4cc-11eb-9d09-c34428b0d040.png)
+![image](https://user-images.githubusercontent.com/82114061/118257386-3591ae80-b4cc-11eb-9b90-95522e9bc3a6.png)
+![image](https://user-images.githubusercontent.com/82114061/118257404-3a566280-b4cc-11eb-9acf-3ce67ab47a9d.png)
+![image](https://user-images.githubusercontent.com/82114061/118257428-417d7080-b4cc-11eb-8096-9d5c2813bdd2.png)
+
 
 # Correlation mapping 
 df1=df.drop(["smoking"], axis = 1, inplace = True)
@@ -172,6 +187,10 @@ corr_features = corr_matrix.columns[filtre].tolist()
 sns.clustermap(df[corr_features].corr(), annot = True, fmt = ".2f")
 plt.title("Correlation Between Features w Corr Theshold 0.75")
 plt.show()
+
+![image](https://user-images.githubusercontent.com/82114061/118257496-535f1380-b4cc-11eb-9872-1c8e25fbae20.png)
+![image](https://user-images.githubusercontent.com/82114061/118257530-5c4fe500-b4cc-11eb-93af-6a46dd6d90af.png)
+
 
 # Detecting Outliers in the data
 plt.figure(figsize=(15, 12))
@@ -200,6 +219,8 @@ plt.subplot(2,3,6)
 sns.boxplot(x='DEATH_EVENT', y='serum_sodium', data=df)
 plt.title('Distribution of serum_sodium');
 
+![image](https://user-images.githubusercontent.com/82114061/118257595-7093e200-b4cc-11eb-889d-0d2dea9074f9.png)
+
 
 # Removing Outliers
 df2=df2[df['creatinine_phosphokinase']<1300]
@@ -227,7 +248,14 @@ displot_numeric_features("platelets").show()
 displot_numeric_features("serum_creatinine").show()
 displot_numeric_features("serum_sodium").show()
 
-# separating features
+![image](https://user-images.githubusercontent.com/82114061/118257640-7c7fa400-b4cc-11eb-8943-fe548a4322d8.png)
+![image](https://user-images.githubusercontent.com/82114061/118257664-83a6b200-b4cc-11eb-80a2-16a3972df551.png)
+![image](https://user-images.githubusercontent.com/82114061/118257681-899c9300-b4cc-11eb-9565-474fa4287b7b.png)
+![image](https://user-images.githubusercontent.com/82114061/118257700-8f927400-b4cc-11eb-8b8c-efc1d3ca3cc1.png)
+![image](https://user-images.githubusercontent.com/82114061/118257719-94efbe80-b4cc-11eb-98dc-d3e58c4e141c.png)
+
+
+# Separating features
 x = df[[c for c in df.columns if c != 'DEATH_EVENT']] 
 y = df['DEATH_EVENT']
 
@@ -239,7 +267,7 @@ x_smote, y_smote = smote.fit_resample(x, y)
 print('Original dataset shape', Counter(y))
 print('Resample dataset shape', Counter(y_smote))
 
-# splitting data
+# Splitting data
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import train_test_split 
 X_train, X_test, y_train, y_test = train_test_split(x_smote, y_smote, test_size=0.4, random_state=0)
@@ -263,10 +291,17 @@ from sklearn.metrics import classification_report
 print(classification_report(y_test,predictions))
 print(confusion_matrix(y_test,predictions))
 
+![Picture10](https://user-images.githubusercontent.com/82114061/118258210-3a0a9700-b4cd-11eb-9e8b-10800cf3e4a2.png)
+
+
+
 # Plotting the confusion matrix
 from sklearn.metrics import confusion_matrix
 confusion_matrix=confusion_matrix(y_test,predictions)
 sns.heatmap(confusion_matrix, annot=True)
+
+![image](https://user-images.githubusercontent.com/82114061/118257885-cbc5d480-b4cc-11eb-97e0-1319bd657364.png)
+
 
 # Conclusive data visualisations 
 fig = px.histogram(df, x="time", color="DEATH_EVENT", marginal="violin", hover_data=df.columns, 
@@ -308,4 +343,46 @@ fig = px.histogram(df, x="creatinine_phosphokinase", color="DEATH_EVENT", margin
                    color_discrete_map={"0": "RebeccaPurple", "1": "MediumPurple"}
                   )
 fig.show()
+
+![newplot (14)](https://user-images.githubusercontent.com/82114061/118258307-53134800-b4cd-11eb-9a51-544210c60284.png)
+![newplot (15)](https://user-images.githubusercontent.com/82114061/118258529-98377a00-b4cd-11eb-9e7c-5c5241b9615f.png)
+![newplot (16)](https://user-images.githubusercontent.com/82114061/118258540-9bcb0100-b4cd-11eb-9984-52a49d9c7d30.png)
+![newplot (17)](https://user-images.githubusercontent.com/82114061/118258542-9ec5f180-b4cd-11eb-8d09-e8e3ee899eb3.png)
+![newplot (18)](https://user-images.githubusercontent.com/82114061/118258549-a1284b80-b4cd-11eb-9524-7c16e3ccf246.png)
+
+# Observations
+DIABETES: There is no relation between Diabetes and death event. The mortality rate for both diabetic and non diabetic is observed to be approximately equal to each other. 
+
+
+AGE: The patients have a higher chance of survival between the ages of 40 and 70. The survival rate is high for both male and female between 50 to 65. Patients having higher age are more prone to Cardiovascular Diseases
+ 
+
+SMOKING: The patients who are non smoking have a higher chance of survival between the ages of 50 and 65. On the other hand, the patients who are smoking have change of survival between the ages 50 to 60. As per the data, the mortality rate is not remarkably dependent on the smoking or non smoking habits of males and females
+ 
+
+SERUM CREATININE: When the level of serum creatinine in the blood is between 0 and 2 mg/dL, it is observed that the patient's survival rates is higher than the death rate. High value of serum creatine increase the probability to die. 
+ 
+ 
+ BLOOD PRESSURE-It is observed that the difference of mortality rate for people who are having Blood Pressure and the mortality rate for people who aren’t are insignificant. Therefore it can be stated that there is no direct relation between the blood pressure levels and CVD deaths.
+
+
+EJECTION FRACTION-It is found that lower the levels of ejection fraction below 50% are fatal and leads to higher death rate which reduces with gradual increase in the ejection fraction. Therefore it can be stated that there is a direct relation between the ejection fraction levels and CVD deaths.
+
+
+CREATININE PHOSPHOKINASE- It is observed that a lower level of creatinine phosphokinase is directly related to a higher death rate which gradually reduces with an increase in the creatinine phosphokinase levels in the sample population. Therefore it can be stated that there is a direct relation between the creatinine phosphokinase levels and CVD deaths.
+
+
+ANAEMIA: The mortality rate for people who are infected by Anaemia are 36% whereas mortality rate for people who are not infected by Anaemia is observed to be 30%. There is  no strong relation between the death event and Anaemia. Hence, Anaemia does not affect Cardiovascular arrest strongly.
+
+
+PLATELETS: The count of platelets in the study depicts weak correlation with death event. death rate is not highly affected by the lower platelet count in the population
+
+
+SERUM SODIUM: With increase in Serum Sodium level the mortality rate decreases, but there is weak influence of level of Serum Sodium on death in the population
+
+
+
+
+
+
 
